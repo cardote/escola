@@ -25,6 +25,10 @@ public class Avaliacao {
 	@JoinColumn(name="idcurso")
 	private Curso curso;
 	
+	@ManyToOne(fetch=FetchType.LAZY)
+	@JoinColumn(name="idaluno")
+	private Aluno aluno;
+	
 	public int getId() {
 		return id;
 	}
@@ -42,6 +46,12 @@ public class Avaliacao {
 	}
 	public void setCurso(Curso curso) {
 		this.curso = curso;
+	}
+	public Aluno getAluno() {
+		return aluno;
+	}
+	public void setAluno(Aluno aluno) {
+		this.aluno = aluno;
 	}
 	
 	

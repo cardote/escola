@@ -33,7 +33,7 @@ public class AvaliacaoController {
 		return this.dao.buscaPorId(id);
 	}
 	
-	public Avaliacao buscarNota(int idcurso) {
-		return this.dao.buscaPorCurso(idcurso);
+	public Avaliacao buscarNota(int idcurso, int idaluno) {
+		return this.dao.buscaPorCursoAluno(idcurso, idaluno);
 	}
 }

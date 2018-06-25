@@ -44,7 +44,7 @@ public class JpaAlunoDao {
 		manager.persist(a);
 		
 	}
-
+	
 	
 	public void altera(Aluno a) {
 		manager.merge(a);

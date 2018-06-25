@@ -1,6 +1,5 @@
 package br.com.fiap.dialog;
 
-import java.sql.SQLIntegrityConstraintViolationException;
 import java.util.List;
 
 import javax.persistence.NoResultException;
@@ -16,18 +15,18 @@ import br.com.fiap.entidades.Avaliacao;
 import br.com.fiap.entidades.Curso;
 
 public class AlunoDialog {
-	
-	public static void menuAluno(AlunoController alunoController, CursoController cursoController, AvaliacaoController avaliacaoController) {
+
+	public static void menuAluno(AlunoController alunoController, CursoController cursoController,
+			AvaliacaoController avaliacaoController) {
 		String opAluno = "";
-		
+
 		try {
-			Aluno aluno = alunoController.buscarPorMatricula(Integer.parseInt(JOptionPane.showInputDialog("Informe sua matricula: ")));
-			
+			Aluno aluno = alunoController
+					.buscarPorMatricula(Integer.parseInt(JOptionPane.showInputDialog("Informe sua matricula: ")));
+
 			while (!opAluno.equals(null) && !opAluno.equals("0")) {
 				opAluno = JOptionPane.showInputDialog("||----------MENU ALUNO----------||\n\n"
-						+ "\t 1 - Listar Cursos\n"
-						+ "\t 2 - Minhas Notas\n"
-						+ "\t 0 - Voltar\n");
+						+ "\t 1 - Listar Cursos\n" + "\t 2 - Minhas Notas\n" + "\t 0 - Voltar\n");
 
 				switch (opAluno) {
 				case "1":
@@ -40,36 +39,33 @@ public class AlunoDialog {
 					break;
 				}
 			}
-				
-		}catch (Exception e) {
+
+		} catch (Exception e) {
 			JOptionPane.showMessageDialog(null, "Aluno não encontrado", "Error", JOptionPane.ERROR_MESSAGE);
 		}
-		
-		
+
 	}
-	
-	public static void menuAlunoAdmin(AlunoController alunoController, AvaliacaoController avaliacaoController, CursoController cursoController) {
+
+	public static void menuAlunoAdmin(AlunoController alunoController, AvaliacaoController avaliacaoController,
+			CursoController cursoController) {
 		String opAluno = "";
-		
+
 		while (!opAluno.equals(null) && !opAluno.equals("0")) {
 			opAluno = JOptionPane.showInputDialog("||----------MENU ALUNO ADMIN----------||\n\n"
-					+ "\t 1 - Cadastrar Aluno\n"
-					+ "\t 2 - Listar Aluno\n" 
-					+ "\t 3 - Excluir Aluno\n" 
-					+ "\t 4 - Dar Nota\n" 
-					+ "\t 0 - Voltar\n");
+					+ "\t 1 - Cadastrar Aluno\n" + "\t 2 - Listar Aluno\n" + "\t 3 - Excluir Aluno\n"
+					+ "\t 4 - Dar Nota\n" + "\t 0 - Voltar\n");
 
 			switch (opAluno) {
 			case "1":
 				cadastrarAluno(alunoController, cursoController);
 				break;
-			case "2": 
+			case "2":
 				listarAlunos(alunoController);
 				break;
 			case "3":
 				excluirAluno(alunoController);
 				break;
-			case "4": 
+			case "4":
 				darNota(alunoController, avaliacaoController, cursoController);
 				break;
 			default:
@@ -77,64 +73,77 @@ public class AlunoDialog {
 			}
 		}
 	}
-	
+
 	private static void cadastrarAluno(AlunoController alunoController, CursoController cursoController) {
 		String nome, endereco;
 		int matricula = 0;
 		Curso curso;
 		List<Curso> cursos = cursoController.lista();
-		
+
 		if (!cursos.isEmpty()) {
 			Aluno aluno = new Aluno();
 			try {
 				do {
-					
+
 					nome = JOptionPane.showInputDialog("Nome do Aluno: ");
 					matricula = Integer.parseInt(JOptionPane.showInputDialog("Número da matricula: "));
 					endereco = JOptionPane.showInputDialog("Endereço do Aluno: ");
-					
-					
+
 					aluno.setNome(nome);
 					aluno.setMatricula(matricula);
 					aluno.setEndereco(endereco);
-					
-					curso = cursoController.buscar(Integer.parseInt(JOptionPane.showInputDialog(cursos + "\nSelecione o curso inicial do aluno:")));
+
+					String msg = "\nSelecione o curso inicial do aluno: \n\n";
+					for (Curso c : cursos) {
+						msg += c.getId() + " - " + c.getNome() + "\n\n";
+
+					}
+
+					curso = cursoController.buscar(Integer.parseInt(JOptionPane.showInputDialog(msg)));
 					curso.getAlunos().add(aluno);
 					aluno.getCursos().add(curso);
-					
-				} while(nome.equals("") || endereco.equals("") || matricula == 0);
-				
+
+				} while (nome.equals("") || endereco.equals("") || matricula == 0);
+
 				alunoController.adicionar(aluno);
 				JOptionPane.showMessageDialog(null, "Aluno adicionado com sucesso", "Sucesso",
 						JOptionPane.INFORMATION_MESSAGE);
-				
-				
+
 			} catch (NumberFormatException e) {
 				JOptionPane.showMessageDialog(null, "Matricula invalida", "Error", JOptionPane.ERROR_MESSAGE);
+			} catch (DataIntegrityViolationException e) {
+
+				JOptionPane.showMessageDialog(null, "Já existe um aluno com esse numero de matricula", "Error",
+						JOptionPane.ERROR_MESSAGE);
 			} catch (Exception e) {
 				JOptionPane.showMessageDialog(null, e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
-				e.printStackTrace();
+
 			}
 		} else {
-			
+
 		}
-		
-		
-		
+
 	}
-	
+
 	private static void listarAlunos(AlunoController alunoController) {
-		JOptionPane.showMessageDialog(null, alunoController.lista());
+		String msg = "\n Alunos Cadastrados \n ";
+		for (Aluno aluno : alunoController.lista()) {
+			msg += "\n\n" + "Matricula: " + aluno.getMatricula() + "\nNome: " + aluno.getNome()
+					+ "\n\n--------------------";
+
+		}
+		JOptionPane.showMessageDialog(null, msg);
+
 	}
-	
+
 	private static void excluirAluno(AlunoController alunoController) {
-		String id;
+		String matricula;
 
 		do {
-			id = JOptionPane.showInputDialog("Id do aluno para excluir:");
-		} while (id.equals(""));
+			matricula = JOptionPane.showInputDialog("matricula do aluno para excluir:");
+		} while (matricula.equals(""));
 
-		Aluno aluno = alunoController.buscar(Integer.parseInt(id));
+		Aluno aluno = alunoController.buscarPorMatricula(Integer.parseInt(matricula));
 
 		if (aluno != null) {
 			try {
@@ -150,63 +159,93 @@ public class AlunoDialog {
 		}
 
 	}
-	
-	private static void darNota(AlunoController alunoController, AvaliacaoController avaliacaoController, CursoController cursoController) {
+
+	private static void darNota(AlunoController alunoController, AvaliacaoController avaliacaoController,
+			CursoController cursoController) {
 		int nota = -1;
 		Curso curso = null;
 		Aluno aluno;
-		
+
 		Avaliacao avaliacao = new Avaliacao();
-		
-	
-			try {
-				do {
-					aluno = alunoController.buscarPorMatricula(Integer.parseInt(JOptionPane.showInputDialog("Informe a matricula do aluno: ")));
-					
-					if (!aluno.getCursos().isEmpty()) {
-						curso = cursoController.buscar(Integer.parseInt(JOptionPane.showInputDialog(aluno.getCursos() + "\nSelecione o curso para dar a nota:")));
-						nota = Integer.parseInt(JOptionPane.showInputDialog("Forneça a nota de 0 à 10: "));
-					} else {
-						JOptionPane.showMessageDialog(null, "O aluno não está cadastrado em nenhum curso", "Error", JOptionPane.ERROR_MESSAGE);
+
+		try {
+			do {
+				aluno = alunoController.buscarPorMatricula(
+						Integer.parseInt(JOptionPane.showInputDialog("Informe a matricula do aluno: ")));
+
+				if (!aluno.getCursos().isEmpty()) {
+					String msg = "\n Selecione o id do curso para dar a nota:\n\n";
+					for (Curso c : aluno.getCursos()) {
+						msg += c.getId() + " - " + c.getNome();
+
 					}
 					
-					
-					
-				} while (nota == -1);
-				
-				avaliacao.setNota(nota);
-				avaliacao.setCurso(curso);
-				
-				avaliacaoController.adicionar(avaliacao);
-				JOptionPane.showMessageDialog(null, "Nota adicionada com sucesso", "Sucesso",
-						JOptionPane.INFORMATION_MESSAGE);
-			} catch (NumberFormatException e) {
-				JOptionPane.showMessageDialog(null, "Nota invalida", "Error", JOptionPane.ERROR_MESSAGE);
-			} catch (NoResultException e) {
-				JOptionPane.showMessageDialog(null, "Informação não encontrada", "Error", JOptionPane.ERROR_MESSAGE);
-			} catch (DataIntegrityViolationException  e) {
-				JOptionPane.showMessageDialog(null, "Já existe uma nota para essa avaliação", "Error", JOptionPane.ERROR_MESSAGE);
-			} catch (Exception e) {
-				
-				JOptionPane.showMessageDialog(null, "Curso não encontrado", "Error", JOptionPane.ERROR_MESSAGE);
-			}
-		
+					curso = cursoController.buscar(Integer.parseInt(
+							JOptionPane.showInputDialog(msg)));
+					nota = Integer.parseInt(JOptionPane.showInputDialog("Forneça a nota de 0 à 10: "));
+				} else {
+					JOptionPane.showMessageDialog(null, "O aluno não está cadastrado em nenhum curso", "Error",
+							JOptionPane.ERROR_MESSAGE);
+				}
+
+			} while (nota == -1);
+
+			avaliacao.setNota(nota);
+			avaliacao.setCurso(curso);
+			avaliacao.setAluno(aluno);
+
+			avaliacaoController.adicionar(avaliacao);
+			JOptionPane.showMessageDialog(null, "Nota adicionada com sucesso", "Sucesso",
+					JOptionPane.INFORMATION_MESSAGE);
+		} catch (NumberFormatException e) {
+			JOptionPane.showMessageDialog(null, "Nota invalida", "Error", JOptionPane.ERROR_MESSAGE);
+		} catch (NoResultException e) {
+			JOptionPane.showMessageDialog(null, "Informação não encontrada", "Error", JOptionPane.ERROR_MESSAGE);
+		} catch (DataIntegrityViolationException e) {
+			e.printStackTrace();
+			JOptionPane.showMessageDialog(null, "Já existe uma nota para essa avaliação", "Error",
+					JOptionPane.ERROR_MESSAGE);
+		} catch (Exception e) {
+
+			JOptionPane.showMessageDialog(null, "Curso não encontrado", "Error", JOptionPane.ERROR_MESSAGE);
+		}
+
 	}
 
 	private static void meusCursos(Aluno aluno, AlunoController alunoController, CursoController cursoController) {
-		
-		JOptionPane.showMessageDialog(null, "Nome: "+aluno.getNome() + "\n" + aluno.getCursos());
-			
+
+		String msg = "\n Meus Cursos \n ";
+		for (Curso curso : aluno.getCursos()) {
+			msg += "\n\n" + "Id: " + curso.getId() + "\nNome: " + curso.getNome() + "\n\n--------------------";
+
+		}
+		JOptionPane.showMessageDialog(null, msg, aluno.getNome(), JOptionPane.INFORMATION_MESSAGE);
+
 	}
 
-	private static void minhasNotas(Aluno aluno, CursoController cursoController, AvaliacaoController avaliacaoController) {
+	private static void minhasNotas(Aluno aluno, CursoController cursoController,
+			AvaliacaoController avaliacaoController) {
 		Curso curso;
-		
+
 		try {
-			curso = cursoController.buscar(Integer.parseInt(JOptionPane.showInputDialog(aluno.getCursos() + "\nSelecione qual curso você deseja saber a nota:")));
-			JOptionPane.showMessageDialog(null, "Sua nota é: " + avaliacaoController.buscarNota(curso.getId()).getNota(), "Notas", JOptionPane.INFORMATION_MESSAGE);
+			String msg = "\n Selecione o id do curso que você deseja saber a nota:\n\n ";
+			for (Curso c : aluno.getCursos()) {
+				msg += c.getId() + " - " + c.getNome() + "\n\n";
+
+			}
+			curso = cursoController.buscar(Integer.parseInt(JOptionPane.showInputDialog(msg)));
+			JOptionPane.showMessageDialog(null,
+					"Sua nota é: " + avaliacaoController.buscarNota(curso.getId(), aluno.getId()).getNota(), "Notas",
+					JOptionPane.INFORMATION_MESSAGE);
+		} catch (NoResultException e) {
+			JOptionPane.showMessageDialog(null, "Você não possui nota nesse curso", "Error", JOptionPane.ERROR_MESSAGE);
+
 		} catch (Exception e) {
+			
 			JOptionPane.showMessageDialog(null, "Curso não encontrado", "Error", JOptionPane.ERROR_MESSAGE);
 		}
+
 	}
+
+
 }

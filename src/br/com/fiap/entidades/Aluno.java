@@ -3,6 +3,7 @@ package br.com.fiap.entidades;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -11,6 +12,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 @Entity
@@ -35,6 +37,10 @@ public class Aluno {
 			@JoinColumn(name = "aluno_id", nullable = false, updatable = false) }, inverseJoinColumns = {
 					@JoinColumn(name = "curso_id", nullable = false, updatable = false) })
 	private List<Curso> cursos = new ArrayList<>();
+	
+	@OneToMany(cascade=CascadeType.ALL, fetch=FetchType.LAZY,
+			mappedBy="aluno")
+	private List<Avaliacao> avaliacoes = new ArrayList<>();
 	
 	public int getId() {
 		return id;

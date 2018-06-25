@@ -33,9 +33,10 @@ public class JpaAvaliacaoDao {
 		return manager.find(Avaliacao.class, id);
 	}
 	
-	public Avaliacao buscaPorCurso(int idcurso) {
-		Query query =  manager.createQuery("SELECT a FROM Avaliacao a WHERE a.curso.id = :idcurso");
+	public Avaliacao buscaPorCursoAluno(int idcurso, int idaluno) {
+		Query query =  manager.createQuery("SELECT a FROM Avaliacao a WHERE a.curso.id = :idcurso and a.aluno.id = :idaluno");
 		query.setParameter("idcurso", idcurso);
+		query.setParameter("idaluno", idaluno);
 		return (Avaliacao) query.getSingleResult();
 	}
 

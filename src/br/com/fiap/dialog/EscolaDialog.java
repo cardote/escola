@@ -6,16 +6,14 @@ import br.com.fiap.controller.EscolaController;
 import br.com.fiap.entidades.Escola;
 
 public class EscolaDialog {
-	
+
 	public static void menuEscola(EscolaController escolaController) {
 		String opEscola = "";
 		while (!opEscola.equals(null) && !opEscola.equals("0")) {
-			opEscola = JOptionPane.showInputDialog("||----------MENU ESCOLA----------||\n\n"
-					+ "\t 1 - Cadastrar Escola\n"
-					+ "\t 2 - Listar Escola\n"
-					+ "\t 3 - Excluir Escola\n"
-					+ "\t 0 - Voltar\n");
-			
+			opEscola = JOptionPane
+					.showInputDialog("||----------MENU ESCOLA----------||\n\n" + "\t 1 - Cadastrar Escola\n"
+							+ "\t 2 - Listar Escola\n" + "\t 3 - Excluir Escola\n" + "\t 0 - Voltar\n");
+
 			switch (opEscola) {
 			case "1":
 				cadastrarEscola(escolaController);
@@ -56,7 +54,14 @@ public class EscolaDialog {
 
 	private static void listarEscolas(EscolaController escolaController) {
 
-		JOptionPane.showMessageDialog(null, escolaController.lista());
+		String msg = "\n Escolas Cadastradas \n ";
+		for (Escola escola : escolaController.lista()) {
+			msg += "\n\n" + "Id: " + escola.getId() + "\nNome: " + escola.getNome() + "\nEndereço: " + escola.getEndereco()
+					+ "\n\n--------------------";
+
+		}
+		JOptionPane.showMessageDialog(null, msg);
+		
 
 	}
 
@@ -76,7 +81,7 @@ public class EscolaDialog {
 						JOptionPane.INFORMATION_MESSAGE);
 			} catch (Exception e) {
 				e.printStackTrace();
-				JOptionPane.showMessageDialog(null, e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+				JOptionPane.showMessageDialog(null, "Você não pode excluir uma escola que possui cursos", "Error", JOptionPane.ERROR_MESSAGE);
 			}
 		} else {
 			JOptionPane.showMessageDialog(null, "Escola não encontrada", "Error", JOptionPane.ERROR_MESSAGE);

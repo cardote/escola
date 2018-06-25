@@ -27,7 +27,7 @@ public class Curso {
 	@Column(name="nome")
 	private String nome;
 	
-	@ManyToOne(fetch=FetchType.LAZY)
+	@ManyToOne(fetch=FetchType.EAGER)
 	@JoinColumn(name="idescola")
 	private Escola escola;
 	

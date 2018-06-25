@@ -40,11 +40,17 @@ public class CursoDialog {
 		Escola escola;
 
 		Curso curso = new Curso();
+		
+		String msg = "\n Escolha o ID da Escola:\n\n ";
+		for (Escola e : escolaController.lista()) {
+			msg += e.getId() + " - " + e.getNome() + "\n\n";
+
+		}
 
 		try {
 			do {
 				escola = escolaController.buscar(Integer
-						.parseInt(JOptionPane.showInputDialog(escolaController.lista() + "\nEscolha o ID da Escola:")));
+						.parseInt(JOptionPane.showInputDialog(msg)));
 				nome = JOptionPane.showInputDialog("Nome do Curso:");
 
 			} while (nome.equals(""));
@@ -62,7 +68,13 @@ public class CursoDialog {
 	}
 	
 	private static void listarCursos(CursoController cursoController) {
-		JOptionPane.showMessageDialog(null, cursoController.lista());
+		String msg = "\n Cursos Cadastrados \n ";
+		for (Curso curso : cursoController.lista()) {
+			msg += "\n\n" + "Id: " + curso.getId() + "\nNome: " + curso.getNome() +"\nEscola: " + curso.getEscola().getNome()
+					+ "\n\n--------------------";
+
+		}
+		JOptionPane.showMessageDialog(null, msg);
 	}
 	
 	private static void excluirCurso(CursoController cursoController) {
@@ -81,7 +93,7 @@ public class CursoDialog {
 						JOptionPane.INFORMATION_MESSAGE);
 			} catch (Exception e) {
 				e.printStackTrace();
-				JOptionPane.showMessageDialog(null, e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+				JOptionPane.showMessageDialog(null, "Você não pode excluir um curso que possui alunos", "Error", JOptionPane.ERROR_MESSAGE);
 			}
 		} else {
 			JOptionPane.showMessageDialog(null, "Curso não encontrado", "Error", JOptionPane.ERROR_MESSAGE);
