@@ -37,5 +37,11 @@ public class AlunoController {
 	public Aluno buscarPorMatricula(int matricula) throws NoResultException {
 		return this.dao.buscaPorMatricula(matricula);
 	}
+	
+	public void adicionaCurso(int idAluno, int idCurso) {
+		this.dao.adicionaCurso(idAluno, idCurso);
+	}
+	
+
 
 }

@@ -33,4 +33,5 @@ public class CursoController {
 	public Curso buscar(int id) throws NoResultException {
 		return this.dao.buscaPorId(id);
 	}
+	
 }

@@ -1,7 +1,9 @@
 package br.com.fiap.entidades;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -34,9 +36,9 @@ public class Curso {
 	@ManyToMany(fetch = FetchType.EAGER, mappedBy = "cursos")
 	private List<Aluno> alunos = new ArrayList<>();
 	
-	@OneToMany(cascade=CascadeType.ALL, fetch=FetchType.LAZY,
+	@OneToMany(cascade=CascadeType.ALL, fetch=FetchType.EAGER,
 			mappedBy="curso")
-	private List<Avaliacao> avaliacoes = new ArrayList<>();
+	private Set<Avaliacao> avaliacoes = new HashSet<>();
 
 	public int getId() {
 		return id;
@@ -72,11 +74,11 @@ public class Curso {
 		this.alunos = alunos;
 	}
 
-	public List<Avaliacao> getAvaliacoes() {
+	public Set<Avaliacao> getAvaliacoes() {
 		return avaliacoes;
 	}
 
-	public void setAvaliacoes(List<Avaliacao> avaliacoes) {
+	public void setAvaliacoes(Set<Avaliacao> avaliacoes) {
 		this.avaliacoes = avaliacoes;
 	}
 

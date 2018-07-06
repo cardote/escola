@@ -38,10 +38,20 @@ public class JpaAlunoDao {
 		query.setParameter("matricula", matricula);
 		return (Aluno) query.getSingleResult();
 	}
+	
+	public void adicionaCurso(int idAluno, int idCurso) {
+		Query query = manager.createNativeQuery("INSERT INTO aluno_curso (aluno_id, curso_id) VALUES (:aluno_id, :curso_id);");
+		query.setParameter("aluno_id", idAluno);
+		query.setParameter("curso_id", idCurso);
+		query.executeUpdate();
+	}
+	
+	
 
 	
 	public void adiciona(Aluno a) {
 		manager.persist(a);
+	
 		
 	}
 	
