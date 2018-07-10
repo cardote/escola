@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import br.com.fiap.dao.JpaCursoDao;
+import br.com.fiap.entidades.Aluno;
 import br.com.fiap.entidades.Curso;
 
 @Transactional
@@ -32,6 +33,10 @@ public class CursoController {
 	
 	public Curso buscar(int id) throws NoResultException {
 		return this.dao.buscaPorId(id);
+	}
+	
+	public List<Curso> buscaCursoAvaliacao(Aluno aluno, Curso curso){
+		return this.dao.buscaCursoAvaliacao(aluno, curso);
 	}
 	
 }

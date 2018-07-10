@@ -4,9 +4,11 @@ import java.util.List;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.persistence.Query;
 
 import org.springframework.stereotype.Repository;
 
+import br.com.fiap.entidades.Aluno;
 import br.com.fiap.entidades.Curso;
 
 @Repository
@@ -38,6 +40,15 @@ public class JpaCursoDao {
 	public void altera(Curso c) {
 		manager.merge(c);
 
+	}
+	
+	@SuppressWarnings("unchecked")
+	public List<Curso> buscaCursoAvaliacao(Aluno aluno, Curso curso) {
+		
+		Query query = manager.createQuery("SELECT c FROM Curso c inner join c.avaliacoes av where av.aluno = :idaluno and av.curso = :idcurso");
+		query.setParameter("idaluno", aluno);
+		query.setParameter("idcurso", curso);
+		return query.getResultList();
 	}
 
 }
